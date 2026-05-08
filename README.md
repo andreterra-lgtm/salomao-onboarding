@@ -1,16 +1,47 @@
-# React + Vite
+# 🤖 Salomão Santos — Onboarding de IA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App de onboarding estratégico para clientes da **Salomão Santos x Weeke**. Guia o usuário por 7 passos para mapear o cérebro digital do seu agente de IA personalizado.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Funcionalidades
 
-## React Compiler
+- **Wizard de 7 passos** — Identidade, Negócio, Objetivo, Personalidade, Conhecimento, Objeções e Transbordo
+- **Tilt 3D** — Cartões de seleção com efeito de perspectiva 3D ao hover
+- **Scan de Auditoria** — Animação de laser + barra de progresso ao gerar o dossiê
+- **Feedback Sonoro** — Sons sutis via Web Audio API (sem arquivos externos)
+- **Assistente Salomão** — Widget flutuante com efeito de digitação em tempo real
+- **Auto-Save** — Dados persistidos em `localStorage`
+- **PDF Estratégico** — Relatório imprimível formatado para A4
+- **100% Responsivo** — Mobile-first, funciona em qualquer tela
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 Stack
 
-## Expanding the ESLint configuration
+- **React 19** + **Vite 8**
+- **Vanilla CSS** com design system Weeke (vermelho `#8b2c2c`)
+- **Google Fonts** — Outfit + Inter
+- **Web Audio API** para sons nativos
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Rodando localmente
+
+```bash
+npm install
+npm run dev
+```
+
+Acesse: [http://localhost:5173](http://localhost:5173)
+
+## 📦 Build de produção
+
+```bash
+npm run build
+```
+
+## 🌐 Deploy (Netlify)
+
+O projeto é automaticamente deployed via **Netlify** em:  
+👉 [https://salomao-onboarding.netlify.app](https://salomao-onboarding.netlify.app)
+
+---
+
+**Salomão Santos** x **Weeke** — Tecnologia que fecha vendas. 🔴
