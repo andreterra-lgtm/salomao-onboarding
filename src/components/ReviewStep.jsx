@@ -1,19 +1,104 @@
-import React from 'react';
+import { useState } from 'react';
+import { useOnboarding } from '../context/OnboardingContext';
+import { computeScore } from '../utils/completenessScore';
+import { sendReport } from '../utils/sendReport';
 
 const Field = ({ label, value }) => (
   <div className="review-stack-item">
     <span className="review-small-label">{label}</span>
-    <div className="review-long-text">{value || <em style={{ color: 'var(--text-secondary)', opacity: 0.6 }}>Não informado</em>}</div>
+    <div className="review-long-text">
+      {value || <em style={{ color: 'var(--text-secondary)', opacity: 0.6 }}>Não informado</em>}
+    </div>
   </div>
 );
 
-const ReviewStep = ({ data }) => {
-  const now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+const CardHeader = ({ title, step, onEditStep }) => (
+  <div className="review-card-header">
+    <div className="review-title-premium">{title}</div>
+    {onEditStep && (
+      <button className="review-card-edit-btn" onClick={() => onEditStep(step)}>
+        ✏️ Editar
+      </button>
+    )}
+  </div>
+);
+
+const ScoreRing = ({ score, suggestions, onEditStep }) => {
+  const color =
+    score >= 80 ? 'var(--success)' :
+    score >= 50 ? 'var(--accent-gold)' :
+    'var(--accent-light)';
+
+  return (
+    <div className="score-ring-wrapper">
+      <div
+        className="score-ring"
+        style={{
+          background: `conic-gradient(${color} 0% ${score}%, rgba(255,255,255,0.05) ${score}% 100%)`,
+        }}
+      >
+        <div className="score-ring-inner">
+          <span className="score-value">{score}%</span>
+          <span className="score-label">completo</span>
+        </div>
+      </div>
+      <div className="score-suggestions">
+        {suggestions.length === 0 ? (
+          <p style={{ color: 'var(--success)', fontWeight: 600, fontSize: '0.9rem' }}>
+            ✅ Dossiê 100% completo!
+          </p>
+        ) : (
+          <>
+            <h4>Campos para melhorar:</h4>
+            {suggestions.map((s) => (
+              <div key={s.key} className="score-suggestion-item">
+                <span>→</span>
+                <button
+                  className="score-suggestion-link"
+                  onClick={() => onEditStep(s.step)}
+                >
+                  {s.label}
+                </button>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ReviewStep = () => {
+  const { formData, goToStep } = useOnboarding();
+  const [emailState, setEmailState] = useState('idle');
+
+  const now = new Date().toLocaleDateString('pt-BR', {
+    day: '2-digit', month: 'long', year: 'numeric',
+  });
+
+  const { score, suggestions } = computeScore(formData);
+
+  const handleSendEmail = async () => {
+    setEmailState('sending');
+    try {
+      await sendReport(formData);
+      setEmailState('sent');
+    } catch {
+      setEmailState('error');
+    }
+  };
+
+  const emailBtnLabel = {
+    idle:    '📧 Enviar Relatório por E-mail',
+    sending: '⏳ Enviando...',
+    sent:    '✅ Enviado com sucesso!',
+    error:   '❌ Erro — Tentar novamente',
+  }[emailState];
 
   return (
     <div className="animate-fade-in" id="printable-area">
 
-      {/* === CABEÇALHO APENAS PARA IMPRESSÃO === */}
+      {/* Cabeçalho só para impressão */}
       <div className="print-header">
         <img src="/logo_salomao.png" alt="Salomão Santos" style={{ height: '55px' }} />
         <div style={{ textAlign: 'right' }}>
@@ -22,94 +107,99 @@ const ReviewStep = ({ data }) => {
         </div>
       </div>
 
-      {/* === TÍTULO === */}
       <div className="review-badge">✅ ESTRATÉGIA FINALIZADA</div>
-      <h2 className="step-title" style={{ textAlign: 'center', fontSize: '2.4rem' }}>
-        Dossiê do Agente
-      </h2>
-      <p className="step-subtitle" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <h2 className="step-title" style={{ textAlign: 'center', fontSize: '2.4rem' }}>Dossiê do Agente</h2>
+      <p className="step-subtitle" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         Mapeamento completo do cérebro digital que será implementado.
       </p>
 
+      <ScoreRing score={score} suggestions={suggestions} onEditStep={goToStep} />
+
       <div className="review-grid">
 
-        {/* NOME DO AGENTE — DESTAQUE HERÓI */}
         <div className="review-card highlight">
-          <div className="review-title-premium">🤖 Identidade Digital</div>
-          <div className="review-value-hero">{data.aiName || 'Não definido'}</div>
-          {data.website && (
+          <CardHeader title="🤖 Identidade Digital" step={1} onEditStep={goToStep} />
+          <div className="review-value-hero">{formData.aiName || 'Não definido'}</div>
+          {formData.website && (
             <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              🔗 {data.website}
+              🔗 {formData.website}
             </p>
           )}
         </div>
 
-        {/* PERFIL DO NEGÓCIO */}
         <div className="review-card">
-          <div className="review-title-premium">🏢 Perfil do Negócio</div>
+          <CardHeader title="🏢 Perfil do Negócio" step={2} onEditStep={goToStep} />
           <div className="review-row">
             <div className="review-col">
               <span className="review-small-label">Empresa / Marca</span>
-              <span className="review-small-value">{data.companyName || '-'}</span>
+              <span className="review-small-value">{formData.companyName || '-'}</span>
             </div>
             <div className="review-col">
               <span className="review-small-label">Nicho / Setor</span>
-              <span className="review-small-value">{data.niche || '-'}</span>
+              <span className="review-small-value">{formData.niche || '-'}</span>
             </div>
           </div>
         </div>
 
-        {/* MISSÃO & TOM */}
         <div className="review-card">
-          <div className="review-title-premium">🎯 Missão & Personalidade</div>
+          <CardHeader title="🎯 Missão & Personalidade" step={3} onEditStep={goToStep} />
           <div className="review-row">
             <div className="review-col">
               <span className="review-small-label">Objetivo Principal</span>
-              <span className="review-small-value">{data.mainObjective || '-'}</span>
+              <span className="review-small-value">{formData.mainObjective || '-'}</span>
             </div>
             <div className="review-col">
               <span className="review-small-label">Tom de Voz</span>
-              <span className="review-small-value">{data.tone || '-'}</span>
+              <span className="review-small-value">{formData.tone || '-'}</span>
             </div>
           </div>
-          {data.forbiddenWords && (
+          {formData.forbiddenWords && (
             <div style={{ marginTop: '1rem' }}>
               <span className="review-small-label">🚫 Vocabulário Bloqueado</span>
-              <span className="review-small-value">{data.forbiddenWords}</span>
+              <span className="review-small-value">{formData.forbiddenWords}</span>
             </div>
           )}
         </div>
 
-        {/* BASE DE CONHECIMENTO */}
         <div className="review-card full-width">
-          <div className="review-title-premium">📚 Base de Conhecimento & Ofertas</div>
+          <CardHeader title="📚 Base de Conhecimento & Ofertas" step={5} onEditStep={goToStep} />
           <div className="review-row-stacked">
-            <Field label="Portfólio de Produtos / Serviços e Preços" value={data.products} />
-            <Field label="Call to Action (Próximo passo após qualificação)" value={data.nextStep} />
+            <Field label="Portfólio de Produtos / Serviços e Preços" value={formData.products} />
+            <Field label="Call to Action (Próximo passo após qualificação)" value={formData.nextStep} />
           </div>
         </div>
 
-        {/* INTELIGÊNCIA EMOCIONAL */}
         <div className="review-card full-width">
-          <div className="review-title-premium">🧠 Inteligência Emocional & Objeções</div>
+          <CardHeader title="🧠 Inteligência Emocional & Objeções" step={6} onEditStep={goToStep} />
           <div className="review-row-stacked">
-            <Field label="Dúvidas Frequentes dos Clientes" value={data.commonQuestions} />
-            <Field label="Objeção Principal e Como Vencê-la" value={data.mainObjection} />
+            <Field label="Dúvidas Frequentes dos Clientes" value={formData.commonQuestions} />
+            <Field label="Objeção Principal e Como Vencê-la" value={formData.mainObjection} />
           </div>
         </div>
 
-        {/* FRONTEIRA HUMANA */}
         <div className="review-card full-width">
-          <div className="review-title-premium">🤝 Protocolo de Transbordo Humano</div>
+          <CardHeader title="🤝 Protocolo de Transbordo Humano" step={7} onEditStep={goToStep} />
           <div className="review-row-stacked">
-            <Field label="Gatilhos de Transferência (Quando a IA para e o humano entra)" value={data.handoffRules} />
-            <Field label="Dados Obrigatórios a Coletar Antes de Transferir" value={data.requiredData} />
+            <Field label="Gatilhos de Transferência (Quando a IA para e o humano entra)" value={formData.handoffRules} />
+            <Field label="Dados Obrigatórios a Coletar Antes de Transferir" value={formData.requiredData} />
           </div>
         </div>
 
       </div>
 
-      {/* SELO DE CONFIDENCIALIDADE */}
+      <div className="email-action-row">
+        <button
+          className={`btn ${emailState === 'sent' ? 'btn-secondary' : 'btn-primary'} email-send-btn`}
+          onClick={emailState === 'idle' || emailState === 'error' ? handleSendEmail : undefined}
+          disabled={emailState === 'sending' || emailState === 'sent'}
+        >
+          {emailBtnLabel}
+        </button>
+        {emailState === 'sent' && (
+          <p className="email-sent-hint">Relatório enviado para a equipe Salomão Santos.</p>
+        )}
+      </div>
+
       <div className="confidential-seal">
         <div className="seal-icon">🔒</div>
         <div className="seal-text">

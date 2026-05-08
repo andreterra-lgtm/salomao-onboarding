@@ -251,6 +251,25 @@ body {
   border: 1px solid var(--border);
 }
 
+/* ===================== SESSION BANNER ===================== */
+.session-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(139,44,44,0.07);
+  border: 1px solid var(--accent);
+  border-radius: 18px;
+  padding: 1.6rem 2rem;
+  margin: 2rem auto 0;
+  max-width: 500px;
+  animation: fadeSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.session-banner-icon { font-size: 1.6rem; }
+.session-banner-text { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; }
+.session-banner-text strong { color: var(--text-primary); }
+.session-banner-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+
 /* ===================== REVIEW / DOSSIE ===================== */
 .review-badge { display: block; text-align: center; color: var(--success); font-weight: 800; letter-spacing: 4px; font-size: 0.72rem; margin-bottom: 1rem; }
 .review-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 2rem; }
@@ -269,6 +288,73 @@ body {
 .confidential-seal { margin-top: 2.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.3rem; background: rgba(244,63,94,0.05); border: 1px dashed var(--error); border-radius: 12px; }
 .seal-icon { font-size: 1.8rem; }
 .seal-text { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
+
+/* ===================== REVIEW — CARD HEADER + EDIT BUTTON ===================== */
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.1rem;
+}
+.review-card-header .review-title-premium { margin-bottom: 0; }
+.review-card-edit-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.74rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.review-card-edit-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(139,44,44,0.08); }
+
+/* ===================== SCORE RING ===================== */
+.score-ring-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.4rem 2rem;
+  margin-bottom: 1.8rem;
+}
+.score-ring {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.score-ring-inner {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-value { font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--text-primary); }
+.score-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 1px; color: var(--text-secondary); text-transform: uppercase; }
+.score-suggestions { flex: 1; }
+.score-suggestions h4 { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.score-suggestion-item { display: flex; align-items: center; gap: 0.4rem; padding: 0.18rem 0; font-size: 0.85rem; color: var(--accent-light); }
+.score-suggestion-link {
+  background: none; border: none; color: var(--accent-light); font-size: 0.85rem;
+  cursor: pointer; padding: 0; text-decoration: underline dotted; font-family: inherit;
+  transition: color 0.2s;
+}
+.score-suggestion-link:hover { color: var(--text-primary); }
+
+/* ===================== EMAIL ACTION ===================== */
+.email-action-row {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.6rem; margin-top: 2rem;
+}
+.email-send-btn { min-width: 280px; }
+.email-sent-hint { font-size: 0.82rem; color: var(--success); }
 
 /* ===================== ROBOT WIDGET ===================== */
 .robot-helper {

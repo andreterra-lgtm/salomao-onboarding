@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 
 export default function ScanEffect({ onComplete }) {
-  const [phase, setPhase] = useState('scanning'); // scanning | revealing
+  const [phase, setPhase] = useState('scanning');
 
   useEffect(() => {
-    // Toca o som de scan
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      
-      // Som de beep tecnológico
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
@@ -20,15 +17,18 @@ export default function ScanEffect({ onComplete }) {
       gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
       oscillator.start(ctx.currentTime);
       oscillator.stop(ctx.currentTime + 0.8);
-    } catch (e) { /* Navegador sem Web Audio */ }
+    } catch {}
 
-    // Após 1.8s o scan termina e revela o relatório
-    const timer = setTimeout(() => {
+    let innerTimer;
+    const outerTimer = setTimeout(() => {
       setPhase('revealing');
-      setTimeout(onComplete, 600);
+      innerTimer = setTimeout(onComplete, 600);
     }, 1800);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(outerTimer);
+      clearTimeout(innerTimer);
+    };
   }, []);
 
   return (
