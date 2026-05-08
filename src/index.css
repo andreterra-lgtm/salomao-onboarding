@@ -443,3 +443,46 @@ body {
   .review-long-text { background: #fafafa !important; color: #333 !important; }
   .step-title { -webkit-text-fill-color: #000 !important; color: #000 !important; }
 }
+
+/* ========================================== REVIEW STACK ITEM ========================================== */
+.review-stack-item { display: flex; flex-direction: column; gap: 0.4rem; }
+
+/* ========================================== PRINT HEADER ========================================== */
+.print-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #8b2c2c;
+}
+
+@media print {
+  .print-header { display: flex !important; }
+  body { background: #fff !important; color: #111 !important; font-size: 12pt; }
+  .header, .button-group, .final-actions, .robot-helper, .scan-overlay { display: none !important; }
+  .main-content { padding: 0 !important; }
+  .wizard-card {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+  }
+  .review-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
+  .review-card { border: 1px solid #ddd !important; background: #fff !important; break-inside: avoid; }
+  .review-card.highlight { grid-column: span 2 !important; background: #fdf5f5 !important; border-color: #8b2c2c !important; }
+  .review-card.full-width { grid-column: span 2 !important; }
+  .review-value-hero { color: #8b2c2c !important; -webkit-text-fill-color: #8b2c2c !important; }
+  .review-title-premium { color: #8b2c2c !important; -webkit-text-fill-color: #8b2c2c !important; }
+  .step-title { color: #111 !important; -webkit-text-fill-color: #111 !important; }
+  .review-badge { color: #10b981 !important; }
+  .review-long-text { background: #f9f9f9 !important; color: #333 !important; border: 1px solid #eee !important; }
+  .review-small-label { color: #666 !important; }
+  .review-small-value { color: #111 !important; }
+  .confidential-seal { border-color: #ccc !important; background: #fafafa !important; }
+  .seal-text, strong { color: #333 !important; }
+  .step-subtitle { color: #555 !important; }
+}
