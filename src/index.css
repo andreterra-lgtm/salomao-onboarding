@@ -486,3 +486,51 @@ body {
   .seal-text, strong { color: #333 !important; }
   .step-subtitle { color: #555 !important; }
 }
+
+/* ========================================== MELHORIAS PREMIUM EXTRAS ========================================== */
+
+/* 1. Barra de Rolagem Customizada */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; transition: background 0.3s; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* 2. Efeito Shine nos Botões */
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-25deg);
+  transition: none;
+}
+
+.btn-primary:hover::before {
+  animation: btnShine 0.8s forwards;
+}
+
+@keyframes btnShine {
+  100% { left: 150%; }
+}
+
+/* 3. Melhoria no Foco do Input */
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 15px rgba(139, 44, 44, 0.25), inset 0 0 5px rgba(139, 44, 44, 0.1);
+}
+
+/* 4. Animação de Entrada Superior */
+.animate-fade-in {
+  animation: premiumSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes premiumSlideIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* 5. Efeito de Hover nas Opções (TiltCard) */
+.option-card:active {
+  transform: scale(0.95) !important;
+}
